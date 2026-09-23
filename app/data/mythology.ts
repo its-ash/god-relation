@@ -44,6 +44,7 @@ const nodes: DeityNode[] = [
   { id: 'kartikeya', name: 'Kartikeya', sanskrit: 'कार्तिकेय', category: 'demigod', epithet: 'God of War', summary: 'God of war and commander of the divine armies; son of Shiva and Parvati (or of Agni, in some tellings).', domain: ['war', 'strategy'], mount: 'Peacock', weapon: ['Vel spear'], source: 'Skanda Purana' },
   { id: 'hanuman', name: 'Hanuman', sanskrit: 'हनुमान्', category: 'demigod', epithet: 'The Devoted', summary: 'Vanara devotee of Rama, son of Vayu, renowned for strength, devotion and the Sundara Kanda feats in the Ramayana.', domain: ['devotion', 'strength'], source: 'Ramayana' },
   { id: 'garuda', name: 'Garuda', sanskrit: 'गरुड़', category: 'demigod', epithet: 'King of Birds', summary: 'Divine eagle-man, mount of Vishnu, son of sage Kashyapa and Vinata.', domain: ['sky'], source: 'Mahabharata / Puranas' },
+  { id: 'vinata', name: 'Vinata', sanskrit: 'विनता', category: 'sage', epithet: 'Mother of Garuda', summary: 'Wife of sage Kashyapa and mother of Garuda and Aruna, the charioteer of Surya.', consort: ['kashyapa'], source: 'Mahabharata / Puranas' },
   { id: 'nandi', name: 'Nandi', sanskrit: 'नन्दी', category: 'demigod', epithet: 'The Sacred Bull', summary: 'Bull mount and gate-guardian of Shiva, symbol of dharma and devotion.', source: 'Shiva Purana' },
 
   // ── Sages / rishis ───────────────────────────────────────────────
@@ -80,6 +81,16 @@ const nodes: DeityNode[] = [
   { id: 'ravana', name: 'Ravana', sanskrit: 'रावण', category: 'asura', epithet: 'The Ten-Headed King', summary: 'Rakshasa king of Lanka, great scholar and devotee of Shiva who abducted Sita, precipitating the war with Rama.', source: 'Ramayana' },
   { id: 'lava', name: 'Lava', sanskrit: 'लव', category: 'epic', epithet: 'Son of Rama', summary: 'Twin son of Rama and Sita, born and raised in sage Valmiki’s ashram during Sita’s exile.', source: 'Ramayana / Uttara Kanda' },
   { id: 'kusha', name: 'Kusha', sanskrit: 'कुश', category: 'epic', epithet: 'Son of Rama', summary: 'Twin son of Rama and Sita, born and raised in sage Valmiki’s ashram during Sita’s exile.', source: 'Ramayana / Uttara Kanda' },
+  { id: 'janaka', name: 'Janaka', sanskrit: 'जनक', category: 'epic', epithet: 'King of Mithila', summary: 'King of Mithila who found the infant Sita while ploughing a sacrificial field, and raised her as his daughter.', source: 'Ramayana' },
+  { id: 'kaikeyi', name: 'Kaikeyi', sanskrit: 'कैकेयी', category: 'epic', epithet: 'Mother of Bharata', summary: 'Second queen of Dasharatha; her demanded boons sent Rama into exile and placed her own son Bharata on the throne.', consort: ['dasharatha'], source: 'Ramayana' },
+  { id: 'sumitra', name: 'Sumitra', sanskrit: 'सुमित्रा', category: 'epic', epithet: 'Mother of Lakshmana & Shatrughna', summary: 'Third queen of Dasharatha, mother of the twins Lakshmana and Shatrughna.', consort: ['dasharatha'], source: 'Ramayana' },
+  { id: 'bharata', name: 'Bharata', sanskrit: 'भरत', category: 'epic', epithet: 'Regent of Ayodhya', summary: 'Son of Dasharatha and Kaikeyi; ruled Ayodhya as Rama’s regent during the exile, placing Rama’s sandals on the throne.', source: 'Ramayana' },
+  { id: 'shatrughna', name: 'Shatrughna', sanskrit: 'शत्रुघ्न', category: 'epic', epithet: 'The Slayer of Enemies', summary: 'Youngest son of Dasharatha and Sumitra, twin of Lakshmana.', source: 'Ramayana' },
+  { id: 'kumbhakarna', name: 'Kumbhakarna', sanskrit: 'कुम्भकर्ण', category: 'asura', epithet: 'The Sleeping Giant', summary: 'Younger brother of Ravana, a giant rakshasa cursed to sleep for months at a time; fought and died defending Lanka.', source: 'Ramayana' },
+  { id: 'vibhishana', name: 'Vibhishana', sanskrit: 'विभीषण', category: 'epic', epithet: 'The Righteous Brother', summary: 'Youngest brother of Ravana; defected to Rama’s side on moral grounds and was later crowned king of Lanka.', source: 'Ramayana' },
+  { id: 'shurpanakha', name: 'Shurpanakha', sanskrit: 'शूर्पणखा', category: 'epic', epithet: 'Sister of Ravana', summary: 'Rakshasa sister of Ravana whose mutilation by Lakshmana, after she desired Rama, precipitated Ravana’s abduction of Sita.', source: 'Ramayana' },
+  { id: 'indrajit', name: 'Indrajit', sanskrit: 'इन्द्रजित्', category: 'epic', epithet: 'Conqueror of Indra', summary: 'Son of Ravana, a formidable warrior-sorcerer who once defeated Indra; slain by Lakshmana in the war.', source: 'Ramayana' },
+  { id: 'mandodari', name: 'Mandodari', sanskrit: 'मन्दोदरी', category: 'epic', epithet: 'Queen of Lanka', summary: 'Chief queen of Ravana, known for her wisdom and virtue; mother of Indrajit.', consort: ['ravana'], source: 'Ramayana' },
 
   // ── Mahabharata figures ────────────────────────────────────────────
   { id: 'arjuna', name: 'Arjuna', sanskrit: 'अर्जुन', category: 'epic', epithet: 'The Peerless Archer', summary: 'Pandava prince, son of Indra, and Krishna’s closest companion; recipient of the Bhagavad Gita’s teaching.', source: 'Mahabharata' },
@@ -98,6 +109,13 @@ const nodes: DeityNode[] = [
   { id: 'pradyumna', name: 'Pradyumna', sanskrit: 'प्रद्युम्न', category: 'epic', epithet: 'Son of Krishna', summary: 'Son of Krishna and Rukmini, considered a rebirth of Kamadeva; father of Aniruddha.', source: 'Bhagavata Purana / Vishnu Purana' },
   { id: 'abhimanyu', name: 'Abhimanyu', sanskrit: 'अभिमन्यु', category: 'epic', epithet: 'The Valiant Son', summary: 'Son of Arjuna and Subhadra (Krishna’s sister); died heroically breaching the Chakravyuha at Kurukshetra.', source: 'Mahabharata' },
   { id: 'subhadra', name: 'Subhadra', sanskrit: 'सुभद्रा', category: 'epic', epithet: 'Sister of Krishna', summary: 'Sister of Krishna and Balarama; wife of Arjuna and mother of Abhimanyu.', consort: ['arjuna'], source: 'Mahabharata' },
+  { id: 'pandu', name: 'Pandu', sanskrit: 'पाण्डु', category: 'epic', epithet: 'King of Hastinapura', summary: 'King of Hastinapura, husband of Kunti and Madri; unable to father children himself, the Pandavas were born to his wives through divine boons.', consort: ['kunti', 'madri'], source: 'Mahabharata' },
+  { id: 'madri', name: 'Madri', sanskrit: 'माद्री', category: 'epic', epithet: 'Second Queen of Pandu', summary: 'Second wife of Pandu, mother of the twins Nakula and Sahadeva through the Ashvin gods.', consort: ['pandu'], source: 'Mahabharata' },
+  { id: 'nakula', name: 'Nakula', sanskrit: 'नकुल', category: 'epic', epithet: 'The Handsome Twin', summary: 'Fourth Pandava, son of Madri and the Ashvin twin gods, renowned for skill with horses and swordsmanship.', source: 'Mahabharata' },
+  { id: 'sahadeva', name: 'Sahadeva', sanskrit: 'सहदेव', category: 'epic', epithet: 'The Wise Twin', summary: 'Fifth Pandava, son of Madri and the Ashvin twin gods, known for wisdom and astrology.', source: 'Mahabharata' },
+  { id: 'drupada', name: 'Drupada', sanskrit: 'द्रुपद', category: 'epic', epithet: 'King of Panchala', summary: 'King of Panchala; performed a sacrifice from whose fire Draupadi and her brother Dhrishtadyumna were born.', source: 'Mahabharata' },
+  { id: 'balarama', name: 'Balarama', sanskrit: 'बलराम', category: 'avatar', epithet: 'Elder Brother of Krishna', summary: 'Elder brother of Krishna, son of Vasudeva and Rohini; sometimes counted among Vishnu’s avatars in place of Buddha.', source: 'Bhagavata Purana / Mahabharata' },
+  { id: 'rohini', name: 'Rohini', sanskrit: 'रोहिणी', category: 'epic', epithet: 'Mother of Balarama', summary: 'A wife of Vasudeva; Balarama’s embryo was transferred to her womb from Devaki’s to save him from Kamsa.', consort: ['vasudeva'], source: 'Bhagavata Purana' },
 
   // ── Asuras / antagonists ────────────────────────────────────────
   { id: 'hiranyakashipu', name: 'Hiranyakashipu', sanskrit: 'हिरण्यकशिपु', category: 'asura', epithet: 'The Tyrant King', summary: 'Daitya king who sought invincibility and persecuted his own devotee son Prahlada; slain by Narasimha.', source: 'Bhagavata Purana' },
@@ -137,7 +155,11 @@ const edges: DeityEdge[] = [
   { id: 'e24', from: 'aditi', to: 'surya', type: 'parent_of', label: 'mother of' },
   { id: 'e25', from: 'diti', to: 'hiranyakashipu', type: 'parent_of', label: 'mother of' },
   { id: 'e26', from: 'diti', to: 'hiranyaksha', type: 'parent_of', label: 'mother of' },
-  { id: 'e27', from: 'kashyapa', to: 'garuda', type: 'parent_of', label: 'father of (via Vinata)' },
+  { id: 'e27', from: 'kashyapa', to: 'garuda', type: 'parent_of', label: 'father of' },
+  { id: 'e117', from: 'kashyapa', to: 'indra', type: 'parent_of', label: 'father of' },
+  { id: 'e118', from: 'kashyapa', to: 'surya', type: 'parent_of', label: 'father of' },
+  { id: 'e119', from: 'kashyapa', to: 'vinata', type: 'consort_of', label: 'wife' },
+  { id: 'e120', from: 'vinata', to: 'garuda', type: 'parent_of', label: 'mother of' },
 
   // Devi forms
   { id: 'e28', from: 'adishakti', to: 'durga', type: 'form_of', label: 'manifests as' },
@@ -212,6 +234,26 @@ const edges: DeityEdge[] = [
   { id: 'e102', from: 'rama', to: 'kusha', type: 'parent_of', label: 'father of' },
   { id: 'e103', from: 'sita', to: 'lava', type: 'parent_of', label: 'mother of' },
   { id: 'e104', from: 'sita', to: 'kusha', type: 'parent_of', label: 'mother of' },
+  { id: 'e121', from: 'janaka', to: 'sita', type: 'parent_of', label: 'father of (foster; found in the earth)' },
+  { id: 'e122', from: 'dasharatha', to: 'kaikeyi', type: 'consort_of', label: 'wife' },
+  { id: 'e123', from: 'dasharatha', to: 'sumitra', type: 'consort_of', label: 'wife' },
+  { id: 'e124', from: 'dasharatha', to: 'bharata', type: 'parent_of', label: 'father of' },
+  { id: 'e125', from: 'kaikeyi', to: 'bharata', type: 'parent_of', label: 'mother of' },
+  { id: 'e126', from: 'dasharatha', to: 'shatrughna', type: 'parent_of', label: 'father of' },
+  { id: 'e127', from: 'sumitra', to: 'shatrughna', type: 'parent_of', label: 'mother of' },
+  { id: 'e128', from: 'sumitra', to: 'lakshmana', type: 'parent_of', label: 'mother of' },
+  { id: 'e129', from: 'bharata', to: 'rama', type: 'sibling_of', label: 'brother of' },
+  { id: 'e130', from: 'shatrughna', to: 'lakshmana', type: 'sibling_of', label: 'twin brother of' },
+  { id: 'e131', from: 'vishrava', to: 'kumbhakarna', type: 'parent_of', label: 'father of' },
+  { id: 'e132', from: 'nikasha', to: 'kumbhakarna', type: 'parent_of', label: 'mother of' },
+  { id: 'e133', from: 'vishrava', to: 'vibhishana', type: 'parent_of', label: 'father of' },
+  { id: 'e134', from: 'nikasha', to: 'vibhishana', type: 'parent_of', label: 'mother of' },
+  { id: 'e135', from: 'vishrava', to: 'shurpanakha', type: 'parent_of', label: 'father of' },
+  { id: 'e136', from: 'nikasha', to: 'shurpanakha', type: 'parent_of', label: 'mother of' },
+  { id: 'e137', from: 'ravana', to: 'mandodari', type: 'consort_of', label: 'wife' },
+  { id: 'e138', from: 'ravana', to: 'indrajit', type: 'parent_of', label: 'father of' },
+  { id: 'e139', from: 'mandodari', to: 'indrajit', type: 'parent_of', label: 'mother of' },
+  { id: 'e140', from: 'lakshmana', to: 'indrajit', type: 'slays', label: 'slays' },
 
   // Mahabharata
   { id: 'e78', from: 'kunti', to: 'karna', type: 'parent_of', label: 'mother of' },
@@ -238,7 +280,25 @@ const edges: DeityEdge[] = [
   { id: 'e113', from: 'arjuna', to: 'subhadra', type: 'consort_of', label: 'wife' },
   { id: 'e114', from: 'subhadra', to: 'krishna', type: 'sibling_of', label: 'sister of' },
   { id: 'e115', from: 'arjuna', to: 'abhimanyu', type: 'parent_of', label: 'father of' },
-  { id: 'e116', from: 'subhadra', to: 'abhimanyu', type: 'parent_of', label: 'mother of' }
+  { id: 'e116', from: 'subhadra', to: 'abhimanyu', type: 'parent_of', label: 'mother of' },
+  { id: 'e141', from: 'pandu', to: 'kunti', type: 'consort_of', label: 'wife' },
+  { id: 'e142', from: 'pandu', to: 'madri', type: 'consort_of', label: 'wife' },
+  { id: 'e143', from: 'pandu', to: 'yudhishthira', type: 'parent_of', label: 'father of (legal)', note: 'Pandu is the acknowledged legal father; the Pandavas’ physical fathers are the devas each boon invoked.' },
+  { id: 'e144', from: 'pandu', to: 'bhima', type: 'parent_of', label: 'father of (legal)' },
+  { id: 'e145', from: 'pandu', to: 'arjuna', type: 'parent_of', label: 'father of (legal)' },
+  { id: 'e146', from: 'madri', to: 'nakula', type: 'parent_of', label: 'mother of' },
+  { id: 'e147', from: 'madri', to: 'sahadeva', type: 'parent_of', label: 'mother of' },
+  { id: 'e148', from: 'pandu', to: 'nakula', type: 'parent_of', label: 'father of (legal)' },
+  { id: 'e149', from: 'pandu', to: 'sahadeva', type: 'parent_of', label: 'father of (legal)' },
+  { id: 'e150', from: 'draupadi', to: 'nakula', type: 'consort_of', label: 'wife' },
+  { id: 'e151', from: 'draupadi', to: 'sahadeva', type: 'consort_of', label: 'wife' },
+  { id: 'e152', from: 'drupada', to: 'draupadi', type: 'parent_of', label: 'father of (fire-born)' },
+  { id: 'e153', from: 'vasudeva', to: 'rohini', type: 'consort_of', label: 'wife' },
+  { id: 'e154', from: 'vasudeva', to: 'balarama', type: 'parent_of', label: 'father of' },
+  { id: 'e155', from: 'rohini', to: 'balarama', type: 'parent_of', label: 'mother of' },
+  { id: 'e156', from: 'balarama', to: 'krishna', type: 'sibling_of', label: 'elder brother of' },
+  { id: 'e157', from: 'balarama', to: 'vishnu', type: 'avatar_of', label: 'avatar of (in some lists)' },
+  { id: 'e158', from: 'krishna', to: 'subhadra', type: 'sibling_of', label: 'brother of' }
 ]
 
 export const mythologyGraph: MythologyGraph = { nodes, edges }
