@@ -24,6 +24,26 @@ function parentEdgeColor(e: DeityEdge, nodesById: Map<string, DeityNode>): strin
   return FATHER_COLOR
 }
 
+const DIM_ALPHA = 0.08
+
+function hexToRgba(hex: string, alpha: number): string {
+  const h = hex.replace('#', '')
+  const r = parseInt(h.substring(0, 2), 16)
+  const g = parseInt(h.substring(2, 4), 16)
+  const b = parseInt(h.substring(4, 6), 16)
+  return `rgba(${r},${g},${b},${alpha})`
+}
+
+function colorToRgba(color: string, alpha: number): string {
+  if (color.startsWith('#')) return hexToRgba(color, alpha)
+  const rgbaMatch = color.match(/rgba?\(([^)]+)\)/)
+  if (rgbaMatch) {
+    const parts = rgbaMatch[1].split(',').map(p => p.trim())
+    return `rgba(${parts[0]},${parts[1]},${parts[2]},${alpha})`
+  }
+  return color
+}
+
 function toVisNode(n: DeityNode, theme: GraphTheme): VisNode {
   const style = categoryStyles[n.category]
   return {
@@ -88,9 +108,59 @@ export function useMythologyNetwork() {
   }
 
   const nodesById = new Map(allNodes.map(n => [n.id, n]))
+  let activeTheme: GraphTheme = graphThemes.dark
+
+  function highlightNode(id: string) {
+    if (!nodesDataSet.value || !edgesDataSet.value) return
+    const related = new Set<string>([id])
+    const relatedEdgeIds = new Set<string>()
+    for (const e of allEdges) {
+      if (e.from === id || e.to === id) {
+        related.add(e.from)
+        related.add(e.to)
+        relatedEdgeIds.add(e.id)
+      }
+    }
+
+    const nodeUpdates = allNodes.map((n) => {
+      const inFocus = related.has(n.id)
+      const vis = toVisNode(n, activeTheme)
+      if (inFocus) return vis
+      const style = categoryStyles[n.category]
+      return {
+        ...vis,
+        color: { background: colorToRgba(style.color, DIM_ALPHA), border: colorToRgba(style.border, DIM_ALPHA) },
+        font: { ...vis.font, color: colorToRgba(activeTheme.nodeFont, DIM_ALPHA * 3) }
+      }
+    })
+    nodesDataSet.value.update(nodeUpdates)
+
+    const edgeUpdates = allEdges.map((e) => {
+      const inFocus = relatedEdgeIds.has(e.id)
+      const vis = toVisEdge(e, nodesById, activeTheme)
+      if (inFocus) return vis
+      const baseColor = typeof vis.color === 'object' && vis.color && 'color' in vis.color ? (vis.color as { color?: string }).color : undefined
+      return {
+        ...vis,
+        color: { color: colorToRgba(baseColor ?? activeTheme.edgeDefault, DIM_ALPHA) },
+        font: { ...vis.font, color: colorToRgba(activeTheme.edgeFont, DIM_ALPHA * 3) }
+      }
+    })
+    edgesDataSet.value.update(edgeUpdates)
+
+    network.value?.selectNodes(Array.from(related))
+  }
+
+  function clearHighlight() {
+    if (!nodesDataSet.value || !edgesDataSet.value) return
+    nodesDataSet.value.update(allNodes.map(n => toVisNode(n, activeTheme)))
+    edgesDataSet.value.update(allEdges.map(e => toVisEdge(e, nodesById, activeTheme)))
+    network.value?.unselectAll()
+  }
 
   function init(el: HTMLElement, theme: GraphTheme = graphThemes.dark) {
     container.value = el
+    activeTheme = theme
     nodesDataSet.value = new DataSet(allNodes.map(n => toVisNode(n, theme)))
     edgesDataSet.value = new DataSet(allEdges.map(e => toVisEdge(e, nodesById, theme)))
 
@@ -100,9 +170,12 @@ export function useMythologyNetwork() {
     net.once('stabilizationIterationsDone', () => { stabilizing.value = false })
     net.on('click', (params) => {
       if (params.nodes.length > 0) {
-        selectedNodeId.value = String(params.nodes[0])
+        const id = String(params.nodes[0])
+        selectedNodeId.value = id
+        highlightNode(id)
       } else {
         selectedNodeId.value = null
+        clearHighlight()
       }
     })
 
@@ -113,14 +186,14 @@ export function useMythologyNetwork() {
     if (!network.value) return
     selectedNodeId.value = id
     network.value.focus(id, { scale: 1.1, animation: { duration: 500, easingFunction: 'easeInOutQuad' } })
-    network.value.selectNodes([id])
+    highlightNode(id)
   }
 
   function resetView() {
     if (!network.value) return
     network.value.fit({ animation: { duration: 500, easingFunction: 'easeInOutQuad' } })
     selectedNodeId.value = null
-    network.value.unselectAll()
+    clearHighlight()
   }
 
   const ZOOM_STEP = 1.25
@@ -161,9 +234,13 @@ export function useMythologyNetwork() {
 
   function setTheme(theme: GraphTheme) {
     if (!nodesDataSet.value || !edgesDataSet.value) return
-    nodesDataSet.value.update(allNodes.map(n => toVisNode(n, theme)))
-    edgesDataSet.value.update(allEdges.map(e => toVisEdge(e, nodesById, theme)))
+    activeTheme = theme
     network.value?.setOptions(buildOptions(theme))
+    if (selectedNodeId.value) {
+      highlightNode(selectedNodeId.value)
+    } else {
+      clearHighlight()
+    }
   }
 
   function destroy() {
