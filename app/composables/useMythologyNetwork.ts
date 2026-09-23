@@ -110,17 +110,35 @@ export function useMythologyNetwork() {
   const nodesById = new Map(allNodes.map(n => [n.id, n]))
   let activeTheme: GraphTheme = graphThemes.dark
 
+  const HIGHLIGHT_DEPTH = 2
+
+  function connectionsWithinDepth(id: string, depth: number): { nodeIds: Set<string>, edgeIds: Set<string> } {
+    const nodeIds = new Set<string>([id])
+    const edgeIds = new Set<string>()
+    let frontier = new Set<string>([id])
+
+    for (let level = 0; level < depth; level++) {
+      const nextFrontier = new Set<string>()
+      for (const e of allEdges) {
+        const fromIn = frontier.has(e.from)
+        const toIn = frontier.has(e.to)
+        if (!fromIn && !toIn) continue
+        edgeIds.add(e.id)
+        if (!nodeIds.has(e.from)) nextFrontier.add(e.from)
+        if (!nodeIds.has(e.to)) nextFrontier.add(e.to)
+        nodeIds.add(e.from)
+        nodeIds.add(e.to)
+      }
+      if (nextFrontier.size === 0) break
+      frontier = nextFrontier
+    }
+
+    return { nodeIds, edgeIds }
+  }
+
   function highlightNode(id: string) {
     if (!nodesDataSet.value || !edgesDataSet.value) return
-    const related = new Set<string>([id])
-    const relatedEdgeIds = new Set<string>()
-    for (const e of allEdges) {
-      if (e.from === id || e.to === id) {
-        related.add(e.from)
-        related.add(e.to)
-        relatedEdgeIds.add(e.id)
-      }
-    }
+    const { nodeIds: related, edgeIds: relatedEdgeIds } = connectionsWithinDepth(id, HIGHLIGHT_DEPTH)
 
     const nodeUpdates = allNodes.map((n) => {
       const inFocus = related.has(n.id)
