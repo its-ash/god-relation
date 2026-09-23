@@ -29,11 +29,11 @@ function toVisNode(n: DeityNode): VisNode {
   return {
     id: n.id,
     label: n.name,
-    shape: 'dot',
-    size: style.size,
-    color: { background: style.color, border: style.border, highlight: { background: style.border, border: '#ffffff' }, hover: { background: style.border, border: '#ffffff' } },
-    font: { color: FONT_COLOR, size: 14, face: 'Inter, sans-serif', strokeWidth: 0 },
+    shape: 'circle',
+    font: { color: FONT_COLOR, size: 13, face: 'Inter, sans-serif', strokeWidth: 0, multi: false },
     borderWidth: 2,
+    color: { background: style.color, border: style.border, highlight: { background: style.border, border: '#ffffff' }, hover: { background: style.border, border: '#ffffff' } },
+    margin: { top: 10, right: 10, bottom: 10, left: 10 },
     group: n.category
   }
 }
@@ -57,7 +57,7 @@ const baseOptions: Options = {
   physics: {
     enabled: true,
     solver: 'forceAtlas2Based',
-    forceAtlas2Based: { gravitationalConstant: -70, centralGravity: 0.008, springLength: 140, springConstant: 0.16, damping: 0.4, avoidOverlap: 0.6 },
+    forceAtlas2Based: { gravitationalConstant: -110, centralGravity: 0.006, springLength: 180, springConstant: 0.14, damping: 0.4, avoidOverlap: 0.9 },
     stabilization: { enabled: true, iterations: 200, fit: true }
   },
   interaction: { hover: true, tooltipDelay: 150, hideEdgesOnDrag: true, hideEdgesOnZoom: false, navigationButtons: false, keyboard: { enabled: true } },
