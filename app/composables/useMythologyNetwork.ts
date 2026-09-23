@@ -4,11 +4,11 @@ import type { Options, Node as VisNode, Edge as VisEdge } from 'vis-network'
 import { mythologyGraph } from '~/data/mythology'
 import { categoryStyles } from '~/data/categoryStyles'
 import type { DeityNode, DeityEdge } from '~/types/graph'
+import type { GraphTheme } from '~/data/graphThemes'
+import { graphThemes } from '~/data/graphThemes'
 
-const FONT_COLOR = '#e8e2f0'
 const MOTHER_COLOR = '#e0559b' // pink
 const FATHER_COLOR = '#e0c23f' // yellow
-const DEFAULT_EDGE_COLOR = 'rgba(232,226,240,0.28)'
 
 // Female parent nodes whose `parent_of` edges don't already say "mother of" in the label
 // (e.g. Adishakti's emanation edges) but are nonetheless the maternal/feminine source.
@@ -24,21 +24,21 @@ function parentEdgeColor(e: DeityEdge, nodesById: Map<string, DeityNode>): strin
   return FATHER_COLOR
 }
 
-function toVisNode(n: DeityNode): VisNode {
+function toVisNode(n: DeityNode, theme: GraphTheme): VisNode {
   const style = categoryStyles[n.category]
   return {
     id: n.id,
     label: n.name,
     shape: 'circle',
-    font: { color: FONT_COLOR, size: 13, face: 'Inter, sans-serif', strokeWidth: 0, multi: false },
+    font: { color: theme.nodeFont, size: 13, face: 'Inter, sans-serif', strokeWidth: 0, multi: false },
     borderWidth: 2,
-    color: { background: style.color, border: style.border, highlight: { background: style.border, border: '#ffffff' }, hover: { background: style.border, border: '#ffffff' } },
+    color: { background: style.color, border: style.border, highlight: { background: style.border, border: theme.selectedBorder }, hover: { background: style.border, border: theme.selectedBorder } },
     margin: { top: 10, right: 10, bottom: 10, left: 10 },
     group: n.category
   }
 }
 
-function toVisEdge(e: DeityEdge, nodesById: Map<string, DeityNode>): VisEdge {
+function toVisEdge(e: DeityEdge, nodesById: Map<string, DeityNode>, theme: GraphTheme): VisEdge {
   const parentColor = parentEdgeColor(e, nodesById)
   return {
     id: e.id,
@@ -46,24 +46,26 @@ function toVisEdge(e: DeityEdge, nodesById: Map<string, DeityNode>): VisEdge {
     to: e.to,
     label: e.label,
     arrows: { to: { enabled: true, scaleFactor: 0.5 } },
-    color: { color: parentColor ?? DEFAULT_EDGE_COLOR, highlight: '#f2b544', hover: parentColor ?? 'rgba(232,226,240,0.6)' },
-    font: { color: '#a89bc4', size: 10, strokeWidth: 0, align: 'top' },
+    color: { color: parentColor ?? theme.edgeDefault, highlight: '#f2b544', hover: parentColor ?? theme.edgeHover },
+    font: { color: theme.edgeFont, size: 10, strokeWidth: 0, align: 'top' },
     smooth: { enabled: true, type: 'continuous', roundness: 0.4 },
     width: parentColor ? 1.5 : 1
   }
 }
 
-const baseOptions: Options = {
-  physics: {
-    enabled: true,
-    solver: 'forceAtlas2Based',
-    forceAtlas2Based: { gravitationalConstant: -110, centralGravity: 0.006, springLength: 180, springConstant: 0.14, damping: 0.4, avoidOverlap: 0.9 },
-    stabilization: { enabled: true, iterations: 200, fit: true }
-  },
-  interaction: { hover: true, tooltipDelay: 150, hideEdgesOnDrag: true, hideEdgesOnZoom: false, navigationButtons: false, keyboard: { enabled: true } },
-  edges: { smooth: { enabled: true, type: 'continuous', roundness: 0.4 } },
-  nodes: { shadow: { enabled: true, color: 'rgba(0,0,0,0.4)', size: 8, x: 0, y: 2 } },
-  layout: { improvedLayout: true }
+function buildOptions(theme: GraphTheme): Options {
+  return {
+    physics: {
+      enabled: true,
+      solver: 'forceAtlas2Based',
+      forceAtlas2Based: { gravitationalConstant: -110, centralGravity: 0.006, springLength: 180, springConstant: 0.14, damping: 0.4, avoidOverlap: 0.9 },
+      stabilization: { enabled: true, iterations: 200, fit: true }
+    },
+    interaction: { hover: true, tooltipDelay: 150, hideEdgesOnDrag: true, hideEdgesOnZoom: false, navigationButtons: false, keyboard: { enabled: true } },
+    edges: { smooth: { enabled: true, type: 'continuous', roundness: 0.4 } },
+    nodes: { shadow: { enabled: true, color: theme.nodeShadow, size: 8, x: 0, y: 2 } },
+    layout: { improvedLayout: true }
+  }
 }
 
 export function useMythologyNetwork() {
@@ -85,13 +87,14 @@ export function useMythologyNetwork() {
     return allEdges.filter(e => e.from === id || e.to === id)
   }
 
-  function init(el: HTMLElement) {
-    container.value = el
-    const nodesById = new Map(allNodes.map(n => [n.id, n]))
-    nodesDataSet.value = new DataSet(allNodes.map(toVisNode))
-    edgesDataSet.value = new DataSet(allEdges.map(e => toVisEdge(e, nodesById)))
+  const nodesById = new Map(allNodes.map(n => [n.id, n]))
 
-    const net = new Network(el, { nodes: nodesDataSet.value, edges: edgesDataSet.value }, baseOptions)
+  function init(el: HTMLElement, theme: GraphTheme = graphThemes.dark) {
+    container.value = el
+    nodesDataSet.value = new DataSet(allNodes.map(n => toVisNode(n, theme)))
+    edgesDataSet.value = new DataSet(allEdges.map(e => toVisEdge(e, nodesById, theme)))
+
+    const net = new Network(el, { nodes: nodesDataSet.value, edges: edgesDataSet.value }, buildOptions(theme))
     network.value = net
 
     net.once('stabilizationIterationsDone', () => { stabilizing.value = false })
@@ -156,6 +159,13 @@ export function useMythologyNetwork() {
     ).slice(0, 8)
   }
 
+  function setTheme(theme: GraphTheme) {
+    if (!nodesDataSet.value || !edgesDataSet.value) return
+    nodesDataSet.value.update(allNodes.map(n => toVisNode(n, theme)))
+    edgesDataSet.value.update(allEdges.map(e => toVisEdge(e, nodesById, theme)))
+    network.value?.setOptions(buildOptions(theme))
+  }
+
   function destroy() {
     network.value?.destroy()
     network.value = null
@@ -175,6 +185,7 @@ export function useMythologyNetwork() {
     zoomOut,
     filterByCategories,
     searchHighlight,
+    setTheme,
     nodeById,
     edgesForNode
   }

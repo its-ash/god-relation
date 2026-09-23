@@ -10,6 +10,9 @@ const graphRef = ref<{ graph: ReturnType<typeof useMythologyNetwork> } | null>(n
 const graphApi = shallowRef<ReturnType<typeof useMythologyNetwork> | null>(null)
 const sidebarOpen = ref(true)
 
+const { theme, init: initTheme, toggle: toggleTheme } = useTheme()
+onBeforeMount(() => initTheme())
+
 const activeCategories = ref<Set<DeityCategory>>(new Set(Object.keys(categoryStyles) as DeityCategory[]))
 
 function onReady(g: ReturnType<typeof useMythologyNetwork>) {
@@ -68,7 +71,12 @@ const edgeCount = computed(() => graphApi.value?.allEdges.length ?? 0)
         <span>{{ edgeCount }} relations</span>
       </div>
 
-      <button class="toggle-sidebar" @click="sidebarOpen = !sidebarOpen">
+      <button class="icon-btn" :aria-label="theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'" @click="toggleTheme">
+        <svg v-if="theme === 'dark'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>
+        <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" /></svg>
+      </button>
+
+      <button class="icon-btn" @click="sidebarOpen = !sidebarOpen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18" /></svg>
       </button>
     </header>
@@ -176,8 +184,7 @@ const edgeCount = computed(() => graphApi.value?.allEdges.length ?? 0)
 
 .sep { margin: 0 6px; opacity: 0.5; }
 
-.toggle-sidebar {
-  margin-left: auto;
+.icon-btn {
   width: 34px;
   height: 34px;
   border-radius: 8px;
@@ -188,10 +195,12 @@ const edgeCount = computed(() => graphApi.value?.allEdges.length ?? 0)
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
-.toggle-sidebar:hover { color: var(--text); }
-.toggle-sidebar svg { width: 16px; height: 16px; }
+.icon-btn:first-of-type { margin-left: auto; }
+.icon-btn:hover { color: var(--accent); border-color: var(--accent); }
+.icon-btn svg { width: 16px; height: 16px; }
 
 .body {
   flex: 1;
@@ -277,7 +286,7 @@ const edgeCount = computed(() => graphApi.value?.allEdges.length ?? 0)
   font-size: 12.5px;
   font-weight: 500;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  box-shadow: 0 8px 24px var(--shadow);
 }
 
 .reset-view:hover { border-color: var(--accent); color: var(--accent); }

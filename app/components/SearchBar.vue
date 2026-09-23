@@ -94,7 +94,7 @@ input::placeholder { color: var(--text-dim); }
   max-height: 320px;
   overflow-y: auto;
   z-index: 20;
-  box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+  box-shadow: 0 12px 32px var(--shadow);
 }
 
 .results li {

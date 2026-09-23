@@ -28,7 +28,7 @@ defineEmits<{ 'zoom-in': []; 'zoom-out': []; 'fit': [] }>()
   border: 1px solid var(--border);
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  box-shadow: 0 8px 24px var(--shadow);
 }
 
 button {

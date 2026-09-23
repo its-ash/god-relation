@@ -1,14 +1,21 @@
 <script setup lang="ts">
+import { graphThemes } from '~/data/graphThemes'
+
 const emit = defineEmits<{ ready: [ret: ReturnType<typeof useMythologyNetwork>] }>()
 
 const el = ref<HTMLElement | null>(null)
 const graph = useMythologyNetwork()
+const { theme } = useTheme()
 
 onMounted(() => {
   if (el.value) {
-    graph.init(el.value)
+    graph.init(el.value, graphThemes[theme.value])
     emit('ready', graph)
   }
+})
+
+watch(theme, (mode) => {
+  graph.setTheme(graphThemes[mode])
 })
 
 onBeforeUnmount(() => {

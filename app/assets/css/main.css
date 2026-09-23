@@ -9,9 +9,26 @@
   --text-dim: #a89bc4;
   --accent: #f2b544;
   --accent-dim: rgba(242, 181, 68, 0.15);
+  --shadow: rgba(0, 0, 0, 0.4);
   --radius: 12px;
   --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Cormorant Garamond', Georgia, serif;
+
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --bg: #f7f4ee;
+  --bg-panel: #ffffff;
+  --bg-panel-alt: #f0ece2;
+  --border: rgba(43, 30, 20, 0.1);
+  --text: #2b2016;
+  --text-dim: #74695c;
+  --accent: #b8762a;
+  --accent-dim: rgba(184, 118, 42, 0.12);
+  --shadow: rgba(43, 30, 20, 0.14);
+
+  color-scheme: light;
 }
 
 * { box-sizing: border-box; }
@@ -27,6 +44,7 @@ body {
   font-family: var(--font-ui);
   -webkit-font-smoothing: antialiased;
   overflow: hidden;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 ::selection { background: var(--accent-dim); color: var(--accent); }
