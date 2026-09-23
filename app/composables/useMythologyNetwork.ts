@@ -6,6 +6,23 @@ import { categoryStyles } from '~/data/categoryStyles'
 import type { DeityNode, DeityEdge } from '~/types/graph'
 
 const FONT_COLOR = '#e8e2f0'
+const MOTHER_COLOR = '#e0559b' // pink
+const FATHER_COLOR = '#e0c23f' // yellow
+const DEFAULT_EDGE_COLOR = 'rgba(232,226,240,0.28)'
+
+// Female parent nodes whose `parent_of` edges don't already say "mother of" in the label
+// (e.g. Adishakti's emanation edges) but are nonetheless the maternal/feminine source.
+const FEMALE_PARENT_IDS = new Set(['adishakti'])
+
+function parentEdgeColor(e: DeityEdge, nodesById: Map<string, DeityNode>): string | undefined {
+  if (e.type !== 'parent_of') return undefined
+  const label = e.label.toLowerCase()
+  if (label.includes('mother')) return MOTHER_COLOR
+  if (label.includes('father')) return FATHER_COLOR
+  const parent = nodesById.get(e.from)
+  if (parent?.category === 'devi' || FEMALE_PARENT_IDS.has(e.from)) return MOTHER_COLOR
+  return FATHER_COLOR
+}
 
 function toVisNode(n: DeityNode): VisNode {
   const style = categoryStyles[n.category]
@@ -21,17 +38,18 @@ function toVisNode(n: DeityNode): VisNode {
   }
 }
 
-function toVisEdge(e: DeityEdge): VisEdge {
+function toVisEdge(e: DeityEdge, nodesById: Map<string, DeityNode>): VisEdge {
+  const parentColor = parentEdgeColor(e, nodesById)
   return {
     id: e.id,
     from: e.from,
     to: e.to,
     label: e.label,
     arrows: { to: { enabled: true, scaleFactor: 0.5 } },
-    color: { color: 'rgba(232,226,240,0.28)', highlight: '#f2b544', hover: 'rgba(232,226,240,0.6)' },
+    color: { color: parentColor ?? DEFAULT_EDGE_COLOR, highlight: '#f2b544', hover: parentColor ?? 'rgba(232,226,240,0.6)' },
     font: { color: '#a89bc4', size: 10, strokeWidth: 0, align: 'top' },
     smooth: { enabled: true, type: 'continuous', roundness: 0.4 },
-    width: 1
+    width: parentColor ? 1.5 : 1
   }
 }
 
@@ -69,8 +87,9 @@ export function useMythologyNetwork() {
 
   function init(el: HTMLElement) {
     container.value = el
+    const nodesById = new Map(allNodes.map(n => [n.id, n]))
     nodesDataSet.value = new DataSet(allNodes.map(toVisNode))
-    edgesDataSet.value = new DataSet(allEdges.map(toVisEdge))
+    edgesDataSet.value = new DataSet(allEdges.map(e => toVisEdge(e, nodesById)))
 
     const net = new Network(el, { nodes: nodesDataSet.value, edges: edgesDataSet.value }, baseOptions)
     network.value = net
@@ -99,6 +118,25 @@ export function useMythologyNetwork() {
     network.value.fit({ animation: { duration: 500, easingFunction: 'easeInOutQuad' } })
     selectedNodeId.value = null
     network.value.unselectAll()
+  }
+
+  const ZOOM_STEP = 1.25
+  const ZOOM_MIN = 0.05
+  const ZOOM_MAX = 4
+
+  function zoomBy(factor: number) {
+    if (!network.value) return
+    const current = network.value.getScale()
+    const next = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, current * factor))
+    network.value.moveTo({ scale: next, animation: { duration: 200, easingFunction: 'easeInOutQuad' } })
+  }
+
+  function zoomIn() {
+    zoomBy(ZOOM_STEP)
+  }
+
+  function zoomOut() {
+    zoomBy(1 / ZOOM_STEP)
   }
 
   function filterByCategories(activeCategories: Set<string>) {
@@ -133,6 +171,8 @@ export function useMythologyNetwork() {
     destroy,
     focusNode,
     resetView,
+    zoomIn,
+    zoomOut,
     filterByCategories,
     searchHighlight,
     nodeById,

@@ -80,6 +80,13 @@ const edgeCount = computed(() => graphApi.value?.allEdges.length ?? 0)
             <h3>Legend &amp; Filters</h3>
             <LegendFilter :active="activeCategories" @toggle="toggleCategory" />
           </div>
+          <div class="sidebar-section">
+            <h3>Relation Lines</h3>
+            <div class="line-legend">
+              <div class="line-row"><span class="line mother" /> Mother of</div>
+              <div class="line-row"><span class="line father" /> Father of</div>
+            </div>
+          </div>
           <div class="sidebar-section about">
             <h3>About</h3>
             <p>An interactive atlas of Hindu mythology — from the primordial Brahman through the Trimurti, the Great Goddess, the Devas, Vishnu's avatars, to the heroes of the Ramayana and Mahabharata.</p>
@@ -94,6 +101,12 @@ const edgeCount = computed(() => graphApi.value?.allEdges.length ?? 0)
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg>
           Reset view
         </button>
+        <ZoomControls
+          v-if="graphApi"
+          @zoom-in="graphApi.zoomIn"
+          @zoom-out="graphApi.zoomOut"
+          @fit="graphApi.resetView"
+        />
       </div>
 
       <Transition name="slide-right">
@@ -205,6 +218,31 @@ const edgeCount = computed(() => graphApi.value?.allEdges.length ?? 0)
   color: var(--text-dim);
   margin: 0 0 10px;
 }
+
+.line-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.line-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+  color: var(--text);
+  padding: 0 8px;
+}
+
+.line {
+  width: 20px;
+  height: 2px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.line.mother { background: #e0559b; }
+.line.father { background: #e0c23f; }
 
 .about p {
   font-size: 12.5px;
