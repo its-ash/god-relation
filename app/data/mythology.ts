@@ -21,6 +21,8 @@ const nodes: DeityNode[] = [
   { id: 'lakshmi', name: 'Lakshmi', sanskrit: 'लक्ष्मी', category: 'devi', epithet: 'Goddess of Fortune', summary: 'Goddess of wealth, prosperity and beauty; consort of Vishnu, born from the Churning of the Ocean of Milk.', consort: ['vishnu'], domain: ['wealth', 'fortune', 'beauty'], mount: 'Owl / Lotus', source: 'Vishnu Purana' },
   { id: 'saraswati', name: 'Saraswati', sanskrit: 'सरस्वती', category: 'devi', epithet: 'Goddess of Knowledge', summary: 'Goddess of knowledge, music, art and speech; consort of Brahma.', consort: ['brahma'], domain: ['knowledge', 'arts', 'speech'], mount: 'Swan', source: 'Rigveda / Brahma Vaivarta Purana' },
   { id: 'ganga', name: 'Ganga', sanskrit: 'गङ्गा', category: 'devi', epithet: 'Goddess of the Ganges', summary: 'Celestial river goddess brought to earth by the penance of Bhagiratha; associated with Shiva, who breaks her fall in his hair.', source: 'Ramayana / Bhagavata Purana' },
+  { id: 'himavan', name: 'Himavan', sanskrit: 'हिमवान्', category: 'deva', epithet: 'Lord of the Himalayas', summary: 'Personification of the Himalayas, king of the mountains; father of Parvati and Ganga.', consort: ['mena'], source: 'Shiva Purana' },
+  { id: 'mena', name: 'Mena', sanskrit: 'मेना', category: 'devi', epithet: 'Queen of the Mountains', summary: 'Wife of Himavan and mother of Parvati and Ganga.', consort: ['himavan'], source: 'Shiva Purana' },
 
   // ── Trimurti ────────────────────────────────────────────────────
   { id: 'brahma', name: 'Brahma', sanskrit: 'ब्रह्मा', category: 'trimurti', epithet: 'The Creator', summary: 'The creator god who fashions the universe, born from a lotus emerging from Vishnu’s navel.', consort: ['saraswati'], domain: ['creation'], mount: 'Hamsa (Swan)', source: 'Puranas' },
@@ -38,6 +40,8 @@ const nodes: DeityNode[] = [
   { id: 'kubera', name: 'Kubera', sanskrit: 'कुबेर', category: 'deva', epithet: 'God of Wealth', summary: 'King of the Yakshas and god of wealth, half-brother of Ravana.', domain: ['wealth'], source: 'Puranas' },
   { id: 'kama', name: 'Kamadeva', sanskrit: 'कामदेव', category: 'deva', epithet: 'God of Love', summary: 'God of love and desire, incinerated by Shiva’s third eye for disturbing his meditation, later restored.', domain: ['love', 'desire'], weapon: ['Sugarcane bow'], source: 'Shiva Purana' },
   { id: 'shani', name: 'Shani', sanskrit: 'शनि', category: 'deva', epithet: 'God of Saturn / Karma', summary: 'Deity of the planet Saturn associated with karma, discipline and justice; son of Surya.', domain: ['karma', 'discipline'], source: 'Puranas' },
+  { id: 'sanjna', name: 'Sanjna', sanskrit: 'संज्ञा', category: 'devi', epithet: 'Wife of Surya', summary: 'Daughter of the divine architect Vishvakarma, first wife of Surya, mother of Yama, Yami and Vaivasvata Manu.', consort: ['surya'], source: 'Puranas' },
+  { id: 'chhaya', name: 'Chhaya', sanskrit: 'छाया', category: 'devi', epithet: 'Shadow-wife of Surya', summary: 'Sanjna’s shadow-double, left in her place with Surya; mother of Shani and Tapati.', consort: ['surya'], source: 'Puranas' },
 
   // ── Demigods / divine beings ────────────────────────────────────
   { id: 'ganesha', name: 'Ganesha', sanskrit: 'गणेश', category: 'demigod', epithet: 'Remover of Obstacles', summary: 'Elephant-headed god of beginnings, wisdom and obstacles; son of Shiva and Parvati.', domain: ['wisdom', 'beginnings'], mount: 'Mouse (Mushika)', source: 'Shiva Purana' },
@@ -54,7 +58,8 @@ const nodes: DeityNode[] = [
   { id: 'aditi', name: 'Aditi', sanskrit: 'अदिति', category: 'devi', epithet: 'Mother of the Devas', summary: 'Daughter of Daksha, wife of Kashyapa, mother of the Adityas (including Indra and Surya/Vishnu’s Vamana avatar).', consort: ['kashyapa'], source: 'Rigveda / Puranas' },
   { id: 'diti', name: 'Diti', sanskrit: 'दिति', category: 'devi', epithet: 'Mother of the Daityas', summary: 'Daughter of Daksha, wife of Kashyapa, mother of the Daitya asuras including Hiranyakashipu and Hiranyaksha.', consort: ['kashyapa'], source: 'Puranas' },
   { id: 'vasishtha', name: 'Vasishtha', sanskrit: 'वसिष्ठ', category: 'sage', epithet: 'Royal Sage', summary: 'One of the Saptarishi, family priest of the Suryavamsha (solar dynasty) including Rama.', source: 'Ramayana' },
-  { id: 'vishwamitra', name: 'Vishwamitra', sanskrit: 'विश्वामित्र', category: 'sage', epithet: 'Sage-King', summary: 'Sage who guided young Rama and Lakshmana; composer of the Gayatri Mantra.', source: 'Ramayana' },
+  { id: 'vishwamitra', name: 'Vishwamitra', sanskrit: 'विश्वामित्र', category: 'sage', epithet: 'Sage-King', summary: 'Sage who guided young Rama and Lakshmana; composer of the Gayatri Mantra. Born a kshatriya king, he attained the status of a Brahmarishi through penance.', source: 'Ramayana' },
+  { id: 'gadhi', name: 'Gadhi', sanskrit: 'गाधि', category: 'epic', epithet: 'King of Kanyakubja', summary: 'King of Kanyakubja and father of Vishwamitra.', source: 'Puranas' },
   { id: 'narada', name: 'Narada', sanskrit: 'नारद', category: 'sage', epithet: 'Divine Messenger', summary: 'Celestial sage and devotee of Vishnu, wandering messenger between gods and mortals across the Puranas.', source: 'Puranas' },
 
   // ── Avatars of Vishnu (Dashavatara + others) ─────────────────────
@@ -78,6 +83,7 @@ const nodes: DeityNode[] = [
   { id: 'kesari', name: 'Kesari', sanskrit: 'केसरी', category: 'epic', epithet: 'Father of Hanuman', summary: 'Vanara chieftain, husband of Anjana and foster-father of Hanuman.', consort: ['anjana'], source: 'Puranas' },
   { id: 'nikasha', name: 'Nikasha', sanskrit: 'निकषा', category: 'epic', epithet: 'Mother of Ravana', summary: 'Daughter of the asura Sumali; wife of the sage Vishrava and mother of Ravana, Kumbhakarna, Vibhishana and Shurpanakha.', consort: ['vishrava'], source: 'Ramayana' },
   { id: 'vishrava', name: 'Vishrava', sanskrit: 'विश्रवा', category: 'sage', epithet: 'Father of Ravana', summary: 'Sage, son of Pulastya; father of Ravana, Kumbhakarna, Vibhishana and Shurpanakha by Nikasha, and of Kubera by another wife.', source: 'Ramayana' },
+  { id: 'ilavida', name: 'Ilavida', sanskrit: 'इलविदा', category: 'epic', epithet: 'Mother of Kubera', summary: 'First wife of the sage Vishrava and mother of Kubera.', consort: ['vishrava'], source: 'Puranas' },
   { id: 'ravana', name: 'Ravana', sanskrit: 'रावण', category: 'asura', epithet: 'The Ten-Headed King', summary: 'Rakshasa king of Lanka, great scholar and devotee of Shiva who abducted Sita, precipitating the war with Rama.', source: 'Ramayana' },
   { id: 'lava', name: 'Lava', sanskrit: 'लव', category: 'epic', epithet: 'Son of Rama', summary: 'Twin son of Rama and Sita, born and raised in sage Valmiki’s ashram during Sita’s exile.', source: 'Ramayana / Uttara Kanda' },
   { id: 'kusha', name: 'Kusha', sanskrit: 'कुश', category: 'epic', epithet: 'Son of Rama', summary: 'Twin son of Rama and Sita, born and raised in sage Valmiki’s ashram during Sita’s exile.', source: 'Ramayana / Uttara Kanda' },
@@ -100,8 +106,10 @@ const nodes: DeityNode[] = [
   { id: 'kunti', name: 'Kunti', sanskrit: 'कुन्ती', category: 'epic', epithet: 'Mother of the Pandavas', summary: 'Mother of Karna, Yudhishthira, Bhima and Arjuna through divine boons; wife of Pandu.', source: 'Mahabharata' },
   { id: 'draupadi', name: 'Draupadi', sanskrit: 'द्रौपदी', category: 'epic', epithet: 'Fire-born Princess', summary: 'Shared wife of the five Pandavas, born from a sacrificial fire; considered an incarnation of Devi.', consort: ['yudhishthira', 'bhima', 'arjuna'], source: 'Mahabharata' },
   { id: 'rukmini', name: 'Rukmini', sanskrit: 'रुक्मिणी', category: 'epic', epithet: 'Chief Queen of Dwarka', summary: 'Principal queen of Krishna at Dwarka, considered an avatar of Lakshmi.', consort: ['krishna'], source: 'Bhagavata Purana' },
+  { id: 'bhishmaka', name: 'Bhishmaka', sanskrit: 'भीष्मक', category: 'epic', epithet: 'King of Vidarbha', summary: 'King of Vidarbha and father of Rukmini; she sent Krishna a letter begging him to rescue her from an arranged marriage.', source: 'Bhagavata Purana' },
   { id: 'radha', name: 'Radha', sanskrit: 'राधा', category: 'epic', epithet: 'Beloved of Krishna', summary: 'Divine consort of Krishna’s youth in Vrindavan, embodiment of devotional love (bhakti); identified with Lakshmi in some traditions.', consort: ['krishna'], source: 'Bhagavata Purana / Gita Govinda' },
   { id: 'sugriva', name: 'Sugriva', sanskrit: 'सुग्रीव', category: 'epic', epithet: 'Vanara King', summary: 'Vanara king of Kishkindha, son of Surya, ally of Rama.', source: 'Ramayana' },
+  { id: 'vali', name: 'Vali', sanskrit: 'वाली', category: 'epic', epithet: 'The Mighty Vanara King', summary: 'Elder brother of Sugriva and former king of Kishkindha, son of Indra; slain by Rama to help Sugriva reclaim the throne.', source: 'Ramayana' },
   { id: 'devaki', name: 'Devaki', sanskrit: 'देवकी', category: 'epic', epithet: 'Birth Mother of Krishna', summary: 'Princess of Mathura, birth mother of Krishna, imprisoned by her tyrant brother Kamsa before Krishna was smuggled to safety.', consort: ['vasudeva'], source: 'Bhagavata Purana / Mahabharata' },
   { id: 'vasudeva', name: 'Vasudeva', sanskrit: 'वसुदेव', category: 'epic', epithet: 'Birth Father of Krishna', summary: 'Yadava noble, birth father of Krishna and husband of Devaki.', consort: ['devaki'], source: 'Bhagavata Purana' },
   { id: 'yashoda', name: 'Yashoda', sanskrit: 'यशोदा', category: 'epic', epithet: 'Foster Mother of Krishna', summary: 'Wife of the cowherd chief Nanda in Vrindavan; raised Krishna as her own after he was secretly exchanged at birth.', consort: ['nanda'], source: 'Bhagavata Purana' },
@@ -170,6 +178,12 @@ const edges: DeityEdge[] = [
   { id: 'e33', from: 'durga', to: 'kali', type: 'form_of', label: 'fury manifests as' },
   { id: 'e34', from: 'durga', to: 'mahishasura', type: 'slays', label: 'slays' },
   { id: 'e35', from: 'shiva', to: 'ganga', type: 'consort_of', label: 'bears in his hair', note: 'Ganga is sometimes listed as a minor consort/river-form associated with Shiva.' },
+  { id: 'e159', from: 'himavan', to: 'mena', type: 'consort_of', label: 'wife' },
+  { id: 'e160', from: 'himavan', to: 'parvati', type: 'parent_of', label: 'father of' },
+  { id: 'e161', from: 'mena', to: 'parvati', type: 'parent_of', label: 'mother of' },
+  { id: 'e162', from: 'himavan', to: 'ganga', type: 'parent_of', label: 'father of' },
+  { id: 'e163', from: 'mena', to: 'ganga', type: 'parent_of', label: 'mother of' },
+  { id: 'e164', from: 'parvati', to: 'ganga', type: 'sibling_of', label: 'sister of' },
 
   // Shiva & Parvati's children
   { id: 'e36', from: 'shiva', to: 'ganesha', type: 'parent_of', label: 'father of' },
@@ -189,6 +203,16 @@ const edges: DeityEdge[] = [
   { id: 'e48', from: 'chandra', to: 'daksha', type: 'consort_of', label: 'married to 27 daughters of' },
   { id: 'e49', from: 'indra', to: 'arjuna', type: 'parent_of', label: 'divine father of' },
   { id: 'e50', from: 'yama', to: 'yudhishthira', type: 'parent_of', label: 'divine father of' },
+  { id: 'e165', from: 'surya', to: 'sanjna', type: 'consort_of', label: 'wife' },
+  { id: 'e166', from: 'surya', to: 'chhaya', type: 'consort_of', label: 'wife' },
+  { id: 'e167', from: 'sanjna', to: 'yama', type: 'parent_of', label: 'mother of' },
+  { id: 'e168', from: 'chhaya', to: 'shani', type: 'parent_of', label: 'mother of' },
+  { id: 'e169', from: 'indra', to: 'vali', type: 'parent_of', label: 'divine father of' },
+  { id: 'e170', from: 'vali', to: 'sugriva', type: 'sibling_of', label: 'elder brother of' },
+  { id: 'e171', from: 'rama', to: 'vali', type: 'slays', label: 'slays' },
+  { id: 'e172', from: 'karna', to: 'yudhishthira', type: 'sibling_of', label: 'elder half-brother of' },
+  { id: 'e173', from: 'karna', to: 'bhima', type: 'sibling_of', label: 'elder half-brother of' },
+  { id: 'e174', from: 'karna', to: 'arjuna', type: 'sibling_of', label: 'elder half-brother of' },
 
   // Avatars of Vishnu (Dashavatara)
   { id: 'e51', from: 'matsya', to: 'vishnu', type: 'avatar_of', label: 'avatar of' },
@@ -230,6 +254,8 @@ const edges: DeityEdge[] = [
   { id: 'e98', from: 'nikasha', to: 'ravana', type: 'parent_of', label: 'mother of' },
   { id: 'e99', from: 'vishrava', to: 'ravana', type: 'parent_of', label: 'father of' },
   { id: 'e100', from: 'vishrava', to: 'kubera', type: 'parent_of', label: 'father of (by another wife)' },
+  { id: 'e175', from: 'vishrava', to: 'ilavida', type: 'consort_of', label: 'wife' },
+  { id: 'e176', from: 'ilavida', to: 'kubera', type: 'parent_of', label: 'mother of' },
   { id: 'e101', from: 'rama', to: 'lava', type: 'parent_of', label: 'father of' },
   { id: 'e102', from: 'rama', to: 'kusha', type: 'parent_of', label: 'father of' },
   { id: 'e103', from: 'sita', to: 'lava', type: 'parent_of', label: 'mother of' },
@@ -269,6 +295,10 @@ const edges: DeityEdge[] = [
   { id: 'e88', from: 'krishna', to: 'radha', type: 'consort_of', label: 'beloved of' },
   { id: 'e89', from: 'lakshmi', to: 'rukmini', type: 'incarnation_of', label: 'incarnates as' },
   { id: 'e90', from: 'narada', to: 'vishnu', type: 'teacher_of', label: 'devotee & messenger of', note: 'Direction reused to express devotee→deity relation.' },
+  { id: 'e177', from: 'bhishmaka', to: 'rukmini', type: 'parent_of', label: 'father of' },
+  { id: 'e178', from: 'brahma', to: 'narada', type: 'parent_of', label: 'mind-born son' },
+  { id: 'e179', from: 'brahma', to: 'vasishtha', type: 'parent_of', label: 'mind-born son' },
+  { id: 'e180', from: 'gadhi', to: 'vishwamitra', type: 'parent_of', label: 'father of' },
   { id: 'e105', from: 'vasudeva', to: 'devaki', type: 'consort_of', label: 'wife' },
   { id: 'e106', from: 'devaki', to: 'krishna', type: 'parent_of', label: 'mother of (birth)' },
   { id: 'e107', from: 'vasudeva', to: 'krishna', type: 'parent_of', label: 'father of (birth)' },
