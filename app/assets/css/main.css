@@ -1,34 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@300;400;500;600&display=swap');
 
 :root {
-  --bg: #0d0a17;
-  --bg-panel: #161029;
-  --bg-panel-alt: #1d1638;
-  --border: rgba(232, 226, 240, 0.1);
-  --text: #e8e2f0;
-  --text-dim: #a89bc4;
-  --accent: #f2b544;
-  --accent-dim: rgba(242, 181, 68, 0.15);
-  --shadow: rgba(0, 0, 0, 0.4);
-  --radius: 12px;
-  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --bg: #050505;
+  --bg-panel: #0a0a0a;
+  --bg-panel-alt: #121212;
+  --border: rgba(255, 255, 255, 0.08);
+  --text: #ededed;
+  --text-dim: #8a8a8a;
+  --accent: #f5f5f5;
+  --accent-dim: rgba(245, 245, 245, 0.1);
+  --shadow: rgba(0, 0, 0, 0.6);
+  --radius: 10px;
+  --font-ui: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
 
   color-scheme: dark;
-}
-
-:root[data-theme='light'] {
-  --bg: #f7f4ee;
-  --bg-panel: #ffffff;
-  --bg-panel-alt: #f0ece2;
-  --border: rgba(43, 30, 20, 0.1);
-  --text: #2b2016;
-  --text-dim: #74695c;
-  --accent: #b8762a;
-  --accent-dim: rgba(184, 118, 42, 0.12);
-  --shadow: rgba(43, 30, 20, 0.14);
-
-  color-scheme: light;
 }
 
 * { box-sizing: border-box; }
@@ -44,16 +30,23 @@ body {
   font-family: var(--font-ui);
   -webkit-font-smoothing: antialiased;
   overflow: hidden;
-  transition: background 0.2s ease, color 0.2s ease;
 }
 
 ::selection { background: var(--accent-dim); color: var(--accent); }
 
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(232,226,240,0.15); border-radius: 8px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(232,226,240,0.28); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.22); }
 
 button { font-family: inherit; }
 
 a { color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

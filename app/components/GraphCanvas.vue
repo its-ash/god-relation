@@ -1,21 +1,14 @@
 <script setup lang="ts">
-import { graphThemes } from '~/data/graphThemes'
-
 const emit = defineEmits<{ ready: [ret: ReturnType<typeof useMythologyNetwork>] }>()
 
 const el = ref<HTMLElement | null>(null)
 const graph = useMythologyNetwork()
-const { theme } = useTheme()
 
 onMounted(() => {
   if (el.value) {
-    graph.init(el.value, graphThemes[theme.value])
+    graph.init(el.value)
     emit('ready', graph)
   }
-})
-
-watch(theme, (mode) => {
-  graph.setTheme(graphThemes[mode])
 })
 
 onBeforeUnmount(() => {
@@ -68,7 +61,7 @@ defineExpose({ graph })
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 2px solid rgba(242, 181, 68, 0.2);
+  border: 2px solid rgba(245, 245, 245, 0.15);
   border-top-color: var(--accent);
   animation: spin 0.9s linear infinite;
 }

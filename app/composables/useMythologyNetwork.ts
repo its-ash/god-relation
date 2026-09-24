@@ -5,10 +5,8 @@ import { mythologyGraph } from '~/data/mythology'
 import { categoryStyles } from '~/data/categoryStyles'
 import type { DeityNode, DeityEdge } from '~/types/graph'
 import type { GraphTheme } from '~/data/graphThemes'
-import { graphThemes } from '~/data/graphThemes'
-
-const MOTHER_COLOR = '#e0559b' // pink
-const FATHER_COLOR = '#e0c23f' // yellow
+import { graphTheme } from '~/data/graphThemes'
+import { MOTHER_COLOR, FATHER_COLOR, SISTER_COLOR, BROTHER_COLOR, WIFE_COLOR } from '~/data/relationLineStyles'
 
 // Female parent nodes whose `parent_of` edges don't already say "mother of" in the label
 // (e.g. Adishakti's emanation edges) but are nonetheless the maternal/feminine source.
@@ -22,6 +20,21 @@ function parentEdgeColor(e: DeityEdge, nodesById: Map<string, DeityNode>): strin
   const parent = nodesById.get(e.from)
   if (parent?.category === 'devi' || FEMALE_PARENT_IDS.has(e.from)) return MOTHER_COLOR
   return FATHER_COLOR
+}
+
+const FALLBACK_EDGE_COLOR = '#8a8a8a'
+
+function siblingEdgeColor(e: DeityEdge): string | undefined {
+  if (e.type !== 'sibling_of') return undefined
+  const label = e.label.toLowerCase()
+  if (label.includes('sister')) return SISTER_COLOR
+  if (label.includes('brother')) return BROTHER_COLOR
+  return FALLBACK_EDGE_COLOR
+}
+
+function edgeColor(e: DeityEdge, nodesById: Map<string, DeityNode>): string {
+  if (e.type === 'consort_of') return WIFE_COLOR
+  return parentEdgeColor(e, nodesById) ?? siblingEdgeColor(e) ?? FALLBACK_EDGE_COLOR
 }
 
 const DIM_ALPHA = 0.08
@@ -48,28 +61,28 @@ function toVisNode(n: DeityNode, theme: GraphTheme): VisNode {
   const style = categoryStyles[n.category]
   return {
     id: n.id,
-    label: n.name,
+    label: n.sanskrit ?? n.name,
     shape: 'circle',
-    font: { color: theme.nodeFont, size: 13, face: 'Inter, sans-serif', strokeWidth: 0, multi: false },
+    font: { color: '#0a0a0a', size: 22, face: '300 Geist, Noto Sans Devanagari, sans-serif', strokeWidth: 0, multi: false },
     borderWidth: 2,
     color: { background: style.color, border: style.border, highlight: { background: style.border, border: theme.selectedBorder }, hover: { background: style.border, border: theme.selectedBorder } },
-    margin: { top: 10, right: 10, bottom: 10, left: 10 },
+    margin: { top: 14, right: 14, bottom: 14, left: 14 },
     group: n.category
   }
 }
 
 function toVisEdge(e: DeityEdge, nodesById: Map<string, DeityNode>, theme: GraphTheme): VisEdge {
-  const parentColor = parentEdgeColor(e, nodesById)
+  const color = edgeColor(e, nodesById)
   return {
     id: e.id,
     from: e.from,
     to: e.to,
     label: e.label,
     arrows: { to: { enabled: true, scaleFactor: 0.5 } },
-    color: { color: parentColor ?? theme.edgeDefault, highlight: '#f2b544', hover: parentColor ?? theme.edgeHover },
+    color: { color, highlight: '#f2b544', hover: color },
     font: { color: theme.edgeFont, size: 10, strokeWidth: 0, align: 'top' },
     smooth: { enabled: true, type: 'continuous', roundness: 0.4 },
-    width: parentColor ? 1.5 : 1
+    width: 1.5
   }
 }
 
@@ -78,13 +91,14 @@ function buildOptions(theme: GraphTheme): Options {
     physics: {
       enabled: true,
       solver: 'forceAtlas2Based',
-      forceAtlas2Based: { gravitationalConstant: -110, centralGravity: 0.006, springLength: 180, springConstant: 0.14, damping: 0.4, avoidOverlap: 0.9 },
-      stabilization: { enabled: true, iterations: 200, fit: true }
+      forceAtlas2Based: { gravitationalConstant: -220, centralGravity: 0.008, springLength: 260, springConstant: 0.1, damping: 0.65, avoidOverlap: 1 },
+      stabilization: { enabled: true, iterations: 400, fit: true },
+      adaptiveTimestep: true
     },
     interaction: { hover: true, tooltipDelay: 150, hideEdgesOnDrag: true, hideEdgesOnZoom: false, navigationButtons: false, keyboard: { enabled: true } },
     edges: { smooth: { enabled: true, type: 'continuous', roundness: 0.4 } },
     nodes: { shadow: { enabled: true, color: theme.nodeShadow, size: 8, x: 0, y: 2 } },
-    layout: { improvedLayout: true }
+    layout: { improvedLayout: true, randomSeed: 42 }
   }
 }
 
@@ -96,8 +110,17 @@ export function useMythologyNetwork() {
   const selectedNodeId = ref<string | null>(null)
   const stabilizing = ref(true)
 
-  const allNodes = mythologyGraph.nodes
   const allEdges = mythologyGraph.edges
+
+  // Nodes with no edges at all (e.g. avatar forms and cosmogony figures whose only
+  // links were consort_of/avatar_of/etc. relations trimmed from this graph) are hidden —
+  // they'd render as disconnected dots with nothing to show on click.
+  const connectedIds = new Set<string>()
+  for (const e of allEdges) {
+    connectedIds.add(e.from)
+    connectedIds.add(e.to)
+  }
+  const allNodes = mythologyGraph.nodes.filter(n => connectedIds.has(n.id))
 
   function nodeById(id: string): DeityNode | undefined {
     return allNodes.find(n => n.id === id)
@@ -108,7 +131,7 @@ export function useMythologyNetwork() {
   }
 
   const nodesById = new Map(allNodes.map(n => [n.id, n]))
-  let activeTheme: GraphTheme = graphThemes.dark
+  const activeTheme: GraphTheme = graphTheme
 
   const HIGHLIGHT_DEPTH = 2
 
@@ -176,21 +199,29 @@ export function useMythologyNetwork() {
     network.value?.unselectAll()
   }
 
-  function init(el: HTMLElement, theme: GraphTheme = graphThemes.dark) {
+  function init(el: HTMLElement) {
     container.value = el
-    activeTheme = theme
-    nodesDataSet.value = new DataSet(allNodes.map(n => toVisNode(n, theme)))
-    edgesDataSet.value = new DataSet(allEdges.map(e => toVisEdge(e, nodesById, theme)))
+    nodesDataSet.value = new DataSet(allNodes.map(n => toVisNode(n, activeTheme)))
+    edgesDataSet.value = new DataSet(allEdges.map(e => toVisEdge(e, nodesById, activeTheme)))
 
-    const net = new Network(el, { nodes: nodesDataSet.value, edges: edgesDataSet.value }, buildOptions(theme))
+    const net = new Network(el, { nodes: nodesDataSet.value, edges: edgesDataSet.value }, buildOptions(activeTheme))
     network.value = net
 
-    net.once('stabilizationIterationsDone', () => { stabilizing.value = false })
+    net.once('stabilizationIterationsDone', () => {
+      stabilizing.value = false
+      net.setOptions({ physics: { enabled: false } })
+    })
+    // Re-enable physics only while a node is actively being dragged, so
+    // rearranging still feels alive without the whole graph drifting/rotating at rest.
+    net.on('dragStart', (params) => {
+      if (params.nodes.length > 0) net.setOptions({ physics: { enabled: true } })
+    })
+    net.on('dragEnd', (params) => {
+      if (params.nodes.length > 0) net.setOptions({ physics: { enabled: false } })
+    })
     net.on('click', (params) => {
       if (params.nodes.length > 0) {
-        const id = String(params.nodes[0])
-        selectedNodeId.value = id
-        highlightNode(id)
+        focusNode(String(params.nodes[0]))
       } else {
         selectedNodeId.value = null
         clearHighlight()
@@ -200,11 +231,39 @@ export function useMythologyNetwork() {
     return net
   }
 
+  const FOCUS_PADDING = 0.92 // fraction of the viewport half-extent left as breathing room
+  const FOCUS_MIN_SCALE = 0.15
+  const FOCUS_MAX_SCALE = 3.5
+
   function focusNode(id: string) {
-    if (!network.value) return
+    if (!network.value || !container.value) return
     selectedNodeId.value = id
-    network.value.focus(id, { scale: 1.1, animation: { duration: 500, easingFunction: 'easeInOutQuad' } })
     highlightNode(id)
+
+    const { nodeIds: related } = connectionsWithinDepth(id, HIGHLIGHT_DEPTH)
+    const positions = network.value.getPositions(Array.from(related))
+    const center = positions[id]
+    if (!center) return
+
+    const { clientWidth, clientHeight } = container.value
+    let maxDx = 0
+    let maxDy = 0
+    for (const otherId of related) {
+      if (otherId === id) continue
+      const pos = positions[otherId]
+      if (!pos) continue
+      maxDx = Math.max(maxDx, Math.abs(pos.x - center.x))
+      maxDy = Math.max(maxDy, Math.abs(pos.y - center.y))
+    }
+    const scaleX = maxDx > 0 ? (clientWidth / 2) * FOCUS_PADDING / maxDx : FOCUS_MAX_SCALE
+    const scaleY = maxDy > 0 ? (clientHeight / 2) * FOCUS_PADDING / maxDy : FOCUS_MAX_SCALE
+    const scale = Math.min(FOCUS_MAX_SCALE, Math.max(FOCUS_MIN_SCALE, Math.min(scaleX, scaleY)))
+
+    network.value.moveTo({
+      position: center,
+      scale,
+      animation: { duration: 500, easingFunction: 'easeInOutQuad' }
+    })
   }
 
   function resetView() {
@@ -250,17 +309,6 @@ export function useMythologyNetwork() {
     ).slice(0, 8)
   }
 
-  function setTheme(theme: GraphTheme) {
-    if (!nodesDataSet.value || !edgesDataSet.value) return
-    activeTheme = theme
-    network.value?.setOptions(buildOptions(theme))
-    if (selectedNodeId.value) {
-      highlightNode(selectedNodeId.value)
-    } else {
-      clearHighlight()
-    }
-  }
-
   function destroy() {
     network.value?.destroy()
     network.value = null
@@ -280,7 +328,6 @@ export function useMythologyNetwork() {
     zoomOut,
     filterByCategories,
     searchHighlight,
-    setTheme,
     nodeById,
     edgesForNode
   }

@@ -33,7 +33,7 @@ const relations = computed<RelationRow[]>(() => {
     </button>
 
     <div class="header">
-      <span class="badge" :style="{ background: style.color, borderColor: style.border, color: '#fff' }">{{ style.label }}</span>
+      <span class="badge" :style="{ background: style.color, borderColor: style.border, color: '#0a0a0a' }">{{ style.label }}</span>
       <h2>{{ node.name }}</h2>
       <p v-if="node.sanskrit" class="sanskrit">{{ node.sanskrit }}</p>
       <p v-if="node.epithet" class="epithet">{{ node.epithet }}</p>
@@ -202,8 +202,8 @@ h2 {
   white-space: nowrap;
 }
 
-.dir.out { color: #6fc9e0; }
-.dir.in { color: #e0a56f; }
+.dir.out { color: #a8a8a8; }
+.dir.in { color: #7a7a7a; }
 
 .target {
   font-size: 13px;

@@ -10,9 +10,6 @@ const graphRef = ref<{ graph: ReturnType<typeof useMythologyNetwork> } | null>(n
 const graphApi = shallowRef<ReturnType<typeof useMythologyNetwork> | null>(null)
 const sidebarOpen = ref(true)
 
-const { theme, init: initTheme, toggle: toggleTheme } = useTheme()
-onBeforeMount(() => initTheme())
-
 const activeCategories = ref<Set<DeityCategory>>(new Set(Object.keys(categoryStyles) as DeityCategory[]))
 
 function onReady(g: ReturnType<typeof useMythologyNetwork>) {
@@ -71,11 +68,6 @@ const edgeCount = computed(() => graphApi.value?.allEdges.length ?? 0)
         <span>{{ edgeCount }} relations</span>
       </div>
 
-      <button class="icon-btn" :aria-label="theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'" @click="toggleTheme">
-        <svg v-if="theme === 'dark'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>
-        <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" /></svg>
-      </button>
-
       <button class="icon-btn" @click="sidebarOpen = !sidebarOpen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18" /></svg>
       </button>
@@ -91,8 +83,11 @@ const edgeCount = computed(() => graphApi.value?.allEdges.length ?? 0)
           <div class="sidebar-section">
             <h3>Relation Lines</h3>
             <div class="line-legend">
-              <div class="line-row"><span class="line mother" /> Mother of</div>
-              <div class="line-row"><span class="line father" /> Father of</div>
+              <div class="line-row"><span class="line" :style="{ background: '#e0559b' }" /> Mother of</div>
+              <div class="line-row"><span class="line" :style="{ background: '#e0c23f' }" /> Father of</div>
+              <div class="line-row"><span class="line" :style="{ background: '#42c5f5' }" /> Sister of</div>
+              <div class="line-row"><span class="line" :style="{ background: '#7fa8e0' }" /> Brother of</div>
+              <div class="line-row"><span class="line" :style="{ background: '#b384f5' }" /> Wife of</div>
             </div>
           </div>
           <div class="sidebar-section about">
@@ -232,6 +227,8 @@ const edgeCount = computed(() => graphApi.value?.allEdges.length ?? 0)
   display: flex;
   flex-direction: column;
   gap: 8px;
+  max-height: 260px;
+  overflow-y: auto;
 }
 
 .line-row {
@@ -249,9 +246,6 @@ const edgeCount = computed(() => graphApi.value?.allEdges.length ?? 0)
   border-radius: 2px;
   flex-shrink: 0;
 }
-
-.line.mother { background: #e0559b; }
-.line.father { background: #e0c23f; }
 
 .about p {
   font-size: 12.5px;

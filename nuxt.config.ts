@@ -4,9 +4,8 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
   app: {
-    baseURL: '/relation/',
     head: {
-      title: 'Devajāla — Hindu Mythology Relations',
+      title: 'Devajala — Hindu Mythology Relations',
       meta: [
         { name: 'description', content: 'An interactive graph of Hindu mythology — deities, avatars, sages and their relations, explored like a Neo4j browser.' }
       ],
