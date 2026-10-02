@@ -24,7 +24,7 @@ defineExpose({ graph })
     <Transition name="fade">
       <div v-if="graph.stabilizing.value" class="loading">
         <div class="loading-ring" />
-        <span>Weaving the cosmic web…</span>
+        <span>Arranging the pantheon…</span>
       </div>
     </Transition>
   </div>
@@ -40,6 +40,7 @@ defineExpose({ graph })
 .canvas {
   width: 100%;
   height: 100%;
+  touch-action: none;
 }
 
 .loading {
@@ -53,15 +54,16 @@ defineExpose({ graph })
   background: var(--bg);
   color: var(--text-dim);
   font-family: var(--font-display);
-  font-size: 18px;
-  letter-spacing: 0.02em;
+  font-style: italic;
+  font-size: 1.125rem;
+  z-index: 5;
 }
 
 .loading-ring {
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 50%;
-  border: 2px solid rgba(245, 245, 245, 0.15);
+  border: 2px solid rgba(236, 222, 196, 0.12);
   border-top-color: var(--accent);
   animation: spin 0.9s linear infinite;
 }

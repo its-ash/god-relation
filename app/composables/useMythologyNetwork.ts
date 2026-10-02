@@ -231,6 +231,13 @@ export function useMythologyNetwork() {
     return net
   }
 
+  // Screen-space areas covered by floating UI (top bar, side panel, bottom sheet) while a node is focused.
+  const focusInsets = { top: 0, right: 0, bottom: 0, left: 0 }
+
+  function setFocusInsets(next: Partial<typeof focusInsets>) {
+    Object.assign(focusInsets, next)
+  }
+
   const FOCUS_PADDING = 0.92 // fraction of the viewport half-extent left as breathing room
   const FOCUS_MIN_SCALE = 0.15
   const FOCUS_MAX_SCALE = 3.5
@@ -245,7 +252,9 @@ export function useMythologyNetwork() {
     const center = positions[id]
     if (!center) return
 
-    const { clientWidth, clientHeight } = container.value
+    const { top, right, bottom, left } = focusInsets
+    const clientWidth = Math.max(120, container.value.clientWidth - left - right)
+    const clientHeight = Math.max(120, container.value.clientHeight - top - bottom)
     let maxDx = 0
     let maxDy = 0
     for (const otherId of related) {
@@ -262,6 +271,7 @@ export function useMythologyNetwork() {
     network.value.moveTo({
       position: center,
       scale,
+      offset: { x: (left - right) / 2, y: (top - bottom) / 2 },
       animation: { duration: 500, easingFunction: 'easeInOutQuad' }
     })
   }
@@ -323,6 +333,7 @@ export function useMythologyNetwork() {
     init,
     destroy,
     focusNode,
+    setFocusInsets,
     resetView,
     zoomIn,
     zoomOut,
